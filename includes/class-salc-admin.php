@@ -96,12 +96,21 @@ class SALC_Admin {
 		);
 	}
 
+	/**
+	 * Sanitize redirect prefix and flush rewrite rules only when value changes.
+	 */
 	public function sanitize_prefix(string $value): string {
+		$old = (string) get_option('salc_redirect_prefix', 'go');
+
 		$sanitized = sanitize_title($value);
-		if (empty($sanitized)) {
+		if ('' === $sanitized) {
 			$sanitized = 'go';
 		}
-		flush_rewrite_rules();
+
+		if ($old !== $sanitized) {
+			flush_rewrite_rules();
+		}
+
 		return $sanitized;
 	}
 
@@ -111,7 +120,7 @@ class SALC_Admin {
 	}
 
 	public function prefix_field_cb(): void {
-		$prefix = get_option('salc_redirect_prefix', 'go');
+		$prefix = (string) get_option('salc_redirect_prefix', 'go');
 		echo '<input type="text" name="salc_redirect_prefix" value="' . esc_attr($prefix) . '" class="regular-text" />';
 		echo '<p class="description">' . esc_html__('Examples: go, out, recommend (no slashes).', 'salc-pro') . '</p>';
 	}
@@ -213,9 +222,9 @@ class SALC_Admin {
 
 	public function columns_content(string $column, int $post_id): void {
 		if ('salc_cloaked' === $column) {
-			$slug   = get_post_meta($post_id, '_salc_cloaked_slug', true);
-			$prefix = get_option('salc_redirect_prefix', 'go');
-			if (!empty($slug)) {
+			$slug   = (string) get_post_meta($post_id, '_salc_cloaked_slug', true);
+			$prefix = (string) get_option('salc_redirect_prefix', 'go');
+			if ('' !== $slug) {
 				$url = home_url('/' . $prefix . '/' . $slug . '/');
 				echo '<a href="' . esc_url($url) . '" target="_blank" rel="noopener noreferrer">' . esc_html($url) . '</a>';
 			} else {
