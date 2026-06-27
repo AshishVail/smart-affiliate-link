@@ -3,26 +3,23 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-class SALC_Activator {
+class SALC_Core {
 
-	public static function activate(): void {
-		// Default options.
-		if (!get_option('salc_redirect_prefix')) {
-			update_option('salc_redirect_prefix', 'go');
-		}
-		if (!get_option('salc_max_replacements_per_post')) {
-			update_option('salc_max_replacements_per_post', 3);
-		}
+	public function init(): void {
+		add_action('plugins_loaded', [$this, 'load_textdomain']);
 
-		// Register CPT and create table before flushing rewrites.
-		SALC_CPT::register_cpt();
-		SALC_DB::create_clicks_table();
-		SALC_Frontend::add_rewrite_rules();
+		// Init components.
+		SALC_CPT::init();
+		SALC_DB::init();
 
-		flush_rewrite_rules();
+		$admin = new SALC_Admin();
+		$admin->init();
+
+		$frontend = new SALC_Frontend();
+		$frontend->init();
 	}
 
-	public static function deactivate(): void {
-		flush_rewrite_rules();
+	public function load_textdomain(): void {
+		load_plugin_textdomain('salc-pro', false, dirname(SALC_PRO_BASENAME) . '/languages');
 	}
 }
