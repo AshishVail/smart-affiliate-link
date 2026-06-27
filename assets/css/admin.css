@@ -1,7 +1,238 @@
+/* Smart Affiliate Link Cloaker & Auto-Replacer Pro - Admin UI Styles */
+
+:root {
+	--salc-bg: #f6f7fb;
+	--salc-card-bg: #ffffff;
+	--salc-border: #dcdcde;
+	--salc-text: #1d2327;
+	--salc-muted: #646970;
+	--salc-primary: #2271b1;
+	--salc-primary-strong: #135e96;
+	--salc-success-bg: #ecf7ed;
+	--salc-success-text: #0f5132;
+	--salc-shadow: 0 1px 1px rgba(0, 0, 0, 0.04), 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* Page wrapper */
+.wrap h1 {
+	margin-bottom: 16px;
+	color: var(--salc-text);
+	font-weight: 600;
+}
+
+/* Dashboard grid */
+.salc-dashboard-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 16px;
+	margin-top: 12px;
+}
+
+@media (min-width: 1100px) {
+	.salc-dashboard-grid {
+		grid-template-columns: 2fr 1fr;
+		align-items: start;
+	}
+}
+
+/* Reusable card */
 .salc-card {
+	background: var(--salc-card-bg);
+	border: 1px solid var(--salc-border);
+	border-radius: 10px;
+	padding: 18px;
+	margin: 0 0 16px;
+	box-shadow: var(--salc-shadow);
+}
+
+.salc-card h2 {
+	margin: 0 0 12px;
+	padding: 0;
+	font-size: 18px;
+	line-height: 1.35;
+	color: var(--salc-text);
+}
+
+/* Chart section */
+.salc-chart-wrap {
+	position: relative;
+	min-height: 300px;
+	background: linear-gradient(180deg, rgba(34, 113, 177, 0.04), rgba(34, 113, 177, 0.01));
+	border: 1px solid #e7eaee;
+	border-radius: 8px;
+	padding: 12px;
+}
+
+#salcClicksChart {
+	display: block;
+	width: 100% !important;
+	height: 300px !important;
+}
+
+/* KPI / stat blocks */
+.salc-stats {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 12px;
+	margin-top: 10px;
+}
+
+@media (min-width: 782px) {
+	.salc-stats {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+.salc-stat {
 	background: #fff;
-	border: 1px solid #dcdcde;
-	padding: 16px;
-	margin: 16px 0;
+	border: 1px solid var(--salc-border);
+	border-radius: 8px;
+	padding: 12px;
+}
+
+.salc-stat__label {
+	font-size: 12px;
+	color: var(--salc-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	margin-bottom: 6px;
+}
+
+.salc-stat__value {
+	font-size: 24px;
+	line-height: 1.2;
+	font-weight: 700;
+	color: var(--salc-text);
+}
+
+/* Tables */
+.salc-card .widefat {
+	border: 1px solid var(--salc-border);
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: none;
+}
+
+.salc-card .widefat thead th {
+	background: #f8f9fa;
+	color: var(--salc-text);
+	font-weight: 600;
+	border-bottom: 1px solid var(--salc-border);
+}
+
+.salc-card .widefat td,
+.salc-card .widefat th {
+	padding: 10px 12px;
+	vertical-align: middle;
+}
+
+.salc-card .widefat tbody tr:nth-child(odd) {
+	background: #fcfcfd;
+}
+
+.salc-card .widefat tbody tr:hover {
+	background: #f5f9ff;
+}
+
+.salc-card .widefat a {
+	color: var(--salc-primary);
+	text-decoration: none;
+}
+
+.salc-card .widefat a:hover,
+.salc-card .widefat a:focus {
+	color: var(--salc-primary-strong);
+	text-decoration: underline;
+}
+
+/* Settings page polish */
+.salc-settings-card {
+	max-width: 900px;
+}
+
+.salc-settings-card .form-table th {
+	width: 240px;
+	color: var(--salc-text);
+	font-weight: 600;
+}
+
+.salc-settings-card .description {
+	color: var(--salc-muted);
+	margin-top: 6px;
+}
+
+/* Inputs */
+.salc-card input[type="text"],
+.salc-card input[type="url"],
+.salc-card input[type="number"],
+.salc-settings-card input[type="text"],
+.salc-settings-card input[type="url"],
+.salc-settings-card input[type="number"] {
+	min-height: 34px;
+	border-color: #c3c4c7;
 	border-radius: 6px;
+}
+
+.salc-card input[type="text"]:focus,
+.salc-card input[type="url"]:focus,
+.salc-card input[type="number"]:focus,
+.salc-settings-card input[type="text"]:focus,
+.salc-settings-card input[type="url"]:focus,
+.salc-settings-card input[type="number"]:focus {
+	border-color: var(--salc-primary);
+	box-shadow: 0 0 0 1px var(--salc-primary);
+}
+
+/* Buttons */
+.salc-card .button-primary,
+.salc-settings-card .button-primary {
+	background: var(--salc-primary);
+	border-color: var(--salc-primary);
+}
+
+.salc-card .button-primary:hover,
+.salc-card .button-primary:focus,
+.salc-settings-card .button-primary:hover,
+.salc-settings-card .button-primary:focus {
+	background: var(--salc-primary-strong);
+	border-color: var(--salc-primary-strong);
+}
+
+/* Empty state / helper text */
+.salc-empty {
+	padding: 14px;
+	background: #f8f9fb;
+	border: 1px dashed #c7ccd1;
+	border-radius: 8px;
+	color: var(--salc-muted);
+}
+
+/* Success badge */
+.salc-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	background: var(--salc-success-bg);
+	color: var(--salc-success-text);
+}
+
+/* Small utilities */
+.salc-mb-0 { margin-bottom: 0 !important; }
+.salc-mt-0 { margin-top: 0 !important; }
+.salc-mt-1 { margin-top: 8px !important; }
+.salc-mt-2 { margin-top: 12px !important; }
+.salc-mt-3 { margin-top: 16px !important; }
+
+/* Improve responsiveness in WP admin on narrow screens */
+@media (max-width: 782px) {
+	.salc-card {
+		padding: 14px;
+		border-radius: 8px;
+	}
+
+	#salcClicksChart {
+		height: 260px !important;
+	}
 }
