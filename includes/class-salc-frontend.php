@@ -55,8 +55,28 @@ class SALC_Frontend {
 			wp_die(esc_html__('Invalid target URL.', 'salc-pro'));
 		}
 
-		// Track click before redirect.
-		SALC_DB::log_click((int) $link_id);
+		// --- ब्रांड Nexovent: डबल काउंटिंग और घोस्ट क्लिक्स रोकने का यूनिक ट्रैकिंग फिल्टर ---
+		$user_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+		$is_prefetch = (isset($_SERVER['HTTP_X_PURPOSE']) && 'preview' === strtolower($_SERVER['HTTP_X_PURPOSE'])) || 
+		               (isset($_SERVER['HTTP_PURPOSE']) && 'prefetch' === strtolower($_SERVER['HTTP_PURPOSE']));
+
+		if (!$is_prefetch && !empty($user_ip)) {
+			$transient_key = 'salc_click_lock_' . md5($user_ip . '_' . $link_id);
+
+			// अगर इस यूजर के IP से पिछले 60 सेकंड में क्लिक नहीं हुआ है, तभी डेटाबेस में लॉग करें
+			if (false === get_transient($transient_key)) {
+				set_transient($transient_key, '1', 60); // 60 सेकंड का एंटी-डबल काउंट लॉक
+				
+				// Track click before redirect.
+				SALC_DB::log_click((int) $link_id);
+			}
+		} elseif ($is_prefetch) {
+			// अगर ब्राउज़र सिर्फ बैकएंड में प्री-फ़ेच कर रहा है, तो क्लिक काउंट मत करो, सिर्फ रिडायरेक्ट होने दो
+		} else {
+			// फॉलबैक: अगर किसी वजह से IP नहीं मिलता, तो नॉर्मल लॉग करो ताकि ट्रैकिंग न छूटे
+			SALC_DB::log_click((int) $link_id);
+		}
+		// ---------------------------------------------------------------------------------
 
 		/**
 		 * Prefer safe redirect. If target host is external, whitelist it for this redirect.
@@ -385,7 +405,7 @@ class SALC_Frontend {
 	private function offset_inside_ranges(int $offset, array $ranges): bool {
 		foreach ($ranges as $range) {
 			$start = (int) ($range[0] ?? -1);
-			$end   = (int) ($range[1] ?? -1);
+			$end   = (int) ($range[1] ?? -1) ;
 			if ($offset >= $start && $offset < $end) {
 				return true;
 			}
