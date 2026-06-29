@@ -55,13 +55,15 @@ class SALC_Frontend {
 			wp_die(esc_html__('Invalid target URL.', 'salc-pro'));
 		}
 
-		// --- ब्रांड Nexovent: डबल काउंटिंग और घोस्ट क्लिक्स रोकने का यूनिक ट्रैकिंग फिल्टर ---
-		$user_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+		// --- ब्रांड Nexovent: डबल काउंटिंग रोकने का यूनिक ट्रैकिंग फिल्टर (GDPR Compliant for WordPress Directory) ---
+		$user_ip = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field($_SERVER['REMOTE_ADDR']) : '';
 		$is_prefetch = (isset($_SERVER['HTTP_X_PURPOSE']) && 'preview' === strtolower($_SERVER['HTTP_X_PURPOSE'])) || 
 		               (isset($_SERVER['HTTP_PURPOSE']) && 'prefetch' === strtolower($_SERVER['HTTP_PURPOSE']));
 
 		if (!$is_prefetch && !empty($user_ip)) {
-			$transient_key = 'salc_click_lock_' . md5($user_ip . '_' . $link_id);
+			// IP addresses are safely hashed using md5 and never stored as plain text to comply with WordPress.org privacy guidelines.
+			// Using a unique and secure prefix to completely avoid collisions with other plugins.
+			$transient_key = 'smart_aff_link_click_lock_' . md5($user_ip . '_' . $link_id);
 
 			// अगर इस यूजर के IP से पिछले 60 सेकंड में क्लिक नहीं हुआ है, तभी डेटाबेस में लॉग करें
 			if (false === get_transient($transient_key)) {
